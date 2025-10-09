@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Bad+Script&family=Satisfy&display=swap');
+
+@font-face {
+  font-family: 'Nova Square';
+  src: local('Nova Square'), url('/fonts/NovaSquare-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Infinity Solar Design System - Cores principais em HSL */
+    --background: 80 20% 98%; /* #FBFCFA branco off-white */
+    --foreground: 0 0% 2%; /* #050505 preto profundo */
+
+    --card: 80 20% 98%;
+    --card-foreground: 0 0% 2%;
+
+    --popover: 80 20% 98%;
+    --popover-foreground: 0 0% 2%;
+
+    /* Verde ecologia/energia - cor principal confiança */
+    --primary: 88 29% 53%; /* #8AAB64 verde solar */
+    --primary-foreground: 80 20% 98%;
+
+    /* Amarelo solar - CTAs e destaques */
+    --secondary: 49 85% 59%; /* #F1D53D amarelo vibrante */
+    --secondary-foreground: 0 0% 2%;
+
+    --muted: 88 29% 90%;
+    --muted-foreground: 0 0% 40%;
+
+    /* Azul accent para links/ícones */
+    --accent: 207 86% 45%; /* #1378D2 azul confiável */
+    --accent-foreground: 80 20% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 80 20% 98%;
+
+    --border: 88 15% 85%;
+    --input: 88 15% 90%;
+    --ring: 88 29% 53%;
+
+    --radius: 0.75rem;
+
+    /* Gradientes personalizados */
+    --gradient-hero: linear-gradient(135deg, hsl(88 29% 53% / 0.95), hsl(88 40% 35% / 0.9));
+    --gradient-cta: linear-gradient(135deg, hsl(49 85% 59%), hsl(43 90% 55%));
+    --gradient-overlay: linear-gradient(180deg, hsl(0 0% 2% / 0.7), hsl(0 0% 2% / 0.3));
+    
+    /* Sombras elegantes */
+    --shadow-soft: 0 2px 20px hsl(0 0% 0% / 0.08);
+    --shadow-medium: 0 8px 30px hsl(0 0% 0% / 0.12);
+    --shadow-strong: 0 12px 40px hsl(0 0% 0% / 0.18);
+    --shadow-glow: 0 0 40px hsl(49 85% 59% / 0.3);
+
+    /* Transições suaves */
+    --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Fonte principal do projeto (local em public/fonts) */
+    --font-primary: 'Nova Square', 'Satisfy', 'Bad Script', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
+  }
+
+  .dark {
+    --background: 0 0% 2%;
+    --foreground: 80 20% 98%;
+
+    --card: 0 0% 5%;
+    --card-foreground: 80 20% 98%;
+
+    --popover: 0 0% 5%;
+    --popover-foreground: 80 20% 98%;
+
+    --primary: 88 29% 53%;
+    --primary-foreground: 0 0% 2%;
+
+    --secondary: 49 85% 59%;
+    --secondary-foreground: 0 0% 2%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 207 86% 45%;
+    --accent-foreground: 80 20% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 80 20% 98%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 88 29% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-primary);
+  }
+}
