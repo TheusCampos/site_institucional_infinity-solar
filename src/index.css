@@ -110,4 +110,7 @@ All colors MUST be HSL.
     font-family: var(--font-primary);
   }
   .bad-script-regular { font-family: "Bad Script", cursive; font-weight: 400; font-style: normal; }
+  .site-header *::before, .site-header *::after { content: none !important; }
+  .site-header nav a { white-space: nowrap; text-transform: none; }
+  .site-header nav a .link-text { display: inline-block; position: relative; z-index: 1; }
 }

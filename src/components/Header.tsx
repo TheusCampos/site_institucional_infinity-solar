@@ -4,6 +4,13 @@ import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
 import BrandLogo from "./icons/BrandLogo";
 
+const NAV_LINKS = Object.freeze([
+  { name: "Início", path: "/" },
+  { name: "Projetos", path: "/projetos" },
+  { name: "Blog", path: "/blog" },
+  { name: "Contato", path: "/contatos" },
+]);
+
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -17,18 +24,12 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: "Início", path: "/" },
-    { name: "Projetos", path: "/projetos" },
-    { name: "Blog", path: "/blog" },
-    { name: "Contato", path: "/contatos" },
-  ];
-
   const isActive = (path: string) => location.pathname === path;
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      data-role="site-header"
+      className={`site-header fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-background/95 backdrop-blur-md shadow-medium" : "bg-transparent"
       }`}
     >
@@ -43,16 +44,18 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+          <nav role="navigation" translate="no" className="hidden md:flex items-center gap-8">
+            {NAV_LINKS.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
+                aria-label={link.name}
+                translate="no"
                 className={`text-sm font-medium transition-colors hover:text-primary relative ${
                   isActive(link.path) ? "text-primary" : "text-foreground"
                 }`}
               >
-                {link.name}
+                <span className="link-text">{link.name}</span>
                 {isActive(link.path) && (
                   <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary"></span>
                 )}
@@ -79,17 +82,19 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <nav className="md:hidden pb-4 animate-fade-in">
-            {navLinks.map((link) => (
+          <nav role="navigation" translate="no" className="md:hidden pb-4 animate-fade-in">
+            {NAV_LINKS.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsMobileMenuOpen(false)}
+                aria-label={link.name}
+                translate="no"
                 className={`block py-3 text-sm font-medium transition-colors hover:text-primary ${
                   isActive(link.path) ? "text-primary" : "text-foreground"
                 }`}
               >
-                {link.name}
+                <span className="link-text">{link.name}</span>
               </Link>
             ))}
             <Button variant="hero" size="sm" className="w-full mt-2" asChild>
