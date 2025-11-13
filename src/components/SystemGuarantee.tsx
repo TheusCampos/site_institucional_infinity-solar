@@ -50,6 +50,8 @@ const SystemGuarantee = () => {
               src={guaranteePanels}
               alt="Sistema de garantias"
               className="w-full rounded-2xl shadow-strong"
+              loading="lazy"
+              decoding="async"
             />
           </div>
 

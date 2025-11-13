@@ -74,6 +74,8 @@ const FAQ = () => {
                 src={faqTechnician}
                 alt="Técnico especializado em energia solar"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary/20 rounded-full blur-3xl"></div>

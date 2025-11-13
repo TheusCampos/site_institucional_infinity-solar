@@ -74,7 +74,7 @@ export default function BlogPost() {
                 ))}
               </div>
               {post.imagem_capa && (
-                <img src={post.imagem_capa} alt={post.titulo || 'Imagem de capa'} className="blog-cover rounded-lg mb-6" loading="lazy" />
+                <img src={post.imagem_capa} alt={post.titulo || 'Imagem de capa'} className="blog-cover rounded-lg mb-6" loading="lazy" decoding="async" />
               )}
               <h1 className="text-4xl font-bold mb-4">{post.titulo}</h1>
               <div className="text-muted-foreground mb-6">{post.autor ? `Por ${post.autor}` : ''}</div>

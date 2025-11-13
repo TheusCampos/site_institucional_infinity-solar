@@ -15,4 +15,17 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          query: ["@tanstack/react-query"],
+          radix: ["@radix-ui/react-select", "@radix-ui/react-popover", "@radix-ui/react-tooltip"],
+          icons: ["lucide-react"],
+        },
+      },
+    },
+  },
 }));

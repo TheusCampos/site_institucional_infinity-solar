@@ -94,6 +94,8 @@ const Projects = () => {
                   src={project.image}
                   alt={project.title}
                   className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
                   {project.category}

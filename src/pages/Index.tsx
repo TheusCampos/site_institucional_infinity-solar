@@ -1,17 +1,18 @@
 import Header from "@/components/Header";
+import { lazy, Suspense } from "react";
 import Hero from "@/components/Hero";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import HowItWorks from "@/components/HowItWorks";
-import Services from "@/components/Services";
-import SystemGuarantee from "@/components/SystemGuarantee";
-import Projects from "@/components/Projects";
-import Brands from "@/components/Brands";
-import Testimonials from "@/components/Testimonials";
-import FAQ from "@/components/FAQ";
-import Contact from "@/components/Contact";
-import Map from "@/components/Map";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+const SystemGuarantee = lazy(() => import("@/components/SystemGuarantee"));
+const WhyChooseUs = lazy(() => import("@/components/WhyChooseUs"));
+const HowItWorks = lazy(() => import("@/components/HowItWorks"));
+const Services = lazy(() => import("@/components/Services"));
+const Projects = lazy(() => import("@/components/Projects"));
+const Brands = lazy(() => import("@/components/Brands"));
+const Testimonials = lazy(() => import("@/components/Testimonials"));
+const FAQ = lazy(() => import("@/components/FAQ"));
+const Contact = lazy(() => import("@/components/Contact"));
+const Map = lazy(() => import("@/components/Map"));
+const Footer = lazy(() => import("@/components/Footer"));
+const WhatsAppButton = lazy(() => import("@/components/WhatsAppButton"));
 import Stats from "@/components/Stats";
 import teamInstall from "@/assets/team-install.jpg";
 import { Button } from "@/components/ui/button";
@@ -103,6 +104,8 @@ const Index = () => {
                   src={teamInstall}
                   alt="Equipe Infinity Solar instalando painéis solares"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-3xl"></div>
@@ -112,18 +115,18 @@ const Index = () => {
         </div>
       </section>
 
-      <SystemGuarantee />
-      <WhyChooseUs />
-      <HowItWorks />
-      <Services />
-      <Projects />
-      <Brands />
-      <Testimonials />
-      <FAQ />
-      <Contact />
-      <Map />
-      <Footer />
-      <WhatsAppButton />
+      <Suspense fallback={<div className="h-24" />}><SystemGuarantee /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><WhyChooseUs /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><HowItWorks /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><Services /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><Projects /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><Brands /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><Testimonials /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><FAQ /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><Contact /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><Map /></Suspense>
+      <Suspense fallback={<div className="h-24" />}><Footer /></Suspense>
+      <Suspense fallback={<div className="h-12" />}><WhatsAppButton /></Suspense>
     </div>
   );
 };

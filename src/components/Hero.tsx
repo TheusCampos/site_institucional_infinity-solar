@@ -12,6 +12,9 @@ const Hero = () => {
           src={heroImage}
           alt="Instalação de painéis solares profissional"
           className="w-full h-full object-cover"
+          loading="eager"
+          decoding="async"
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-overlay"></div>
       </div>
