@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Checkbox } from "./ui/checkbox";
+// Substituímos Textarea/Checkbox por elementos nativos estilizados
 import { Label } from "./ui/label";
 import { Card, CardContent } from "./ui/card";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
@@ -17,31 +16,57 @@ const Contact = () => {
     message: "",
     consent: false,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const errors: string[] = [];
+    if (!formData.name.trim()) errors.push("Nome completo é obrigatório.");
+    if (!formData.email.trim()) errors.push("Email é obrigatório.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.push("Formato de email inválido.");
+    if (!formData.phone.trim()) errors.push("Telefone é obrigatório.");
+    if (!formData.message.trim()) errors.push("Mensagem é obrigatória.");
+    if (!formData.consent) errors.push("É necessário aceitar a política de privacidade.");
+    return errors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.consent) {
-      toast({
-        title: "Atenção",
-        description: "Por favor, aceite a política de privacidade.",
-        variant: "destructive",
-      });
+    const errors = validateForm();
+    if (errors.length) {
+      toast({ title: "Verifique os dados", description: errors.join(" "), variant: "destructive" });
       return;
     }
-
-    toast({
-      title: "Mensagem enviada!",
-      description: "Entraremos em contato em breve.",
-    });
-
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-      consent: false,
-    });
+    setIsLoading(true);
+    try {
+      const payload = {
+        full_name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        consent: formData.consent,
+      };
+      const res = await fetch("http://gotecnologia.com:9003/contact/messages", {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        credentials: "omit",
+        mode: "cors",
+      });
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(text || `Falha ao enviar mensagem (status ${res.status}).`);
+      }
+      toast({ title: "Mensagem enviada!", description: "Entraremos em contato em breve." });
+      setFormData({ name: "", email: "", phone: "", message: "", consent: false });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Tente novamente mais tarde.";
+      toast({ title: "Erro ao enviar", description: message, variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (
@@ -167,7 +192,7 @@ const Contact = () => {
 
                 <div>
                   <Label htmlFor="message">Mensagem</Label>
-                  <Textarea
+                  <textarea
                     id="message"
                     name="message"
                     value={formData.message}
@@ -175,24 +200,26 @@ const Contact = () => {
                     required
                     rows={4}
                     placeholder="Conte-nos sobre seu projeto..."
+                    className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
 
                 <div className="flex items-start gap-2">
-                  <Checkbox
+                  <input
                     id="consent"
+                    type="checkbox"
                     checked={formData.consent}
-                    onCheckedChange={(checked) =>
-                      setFormData({ ...formData, consent: checked as boolean })
-                    }
+                    onChange={(e) => setFormData({ ...formData, consent: e.currentTarget.checked })}
+                    className="mt-[2px] h-4 w-4 rounded border-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    aria-label="Aceitar política de privacidade"
                   />
                   <Label htmlFor="consent" className="text-sm text-muted-foreground cursor-pointer">
                     Aceito receber contato e concordo com a política de privacidade
                   </Label>
                 </div>
 
-                <Button type="submit" variant="hero" size="lg" className="w-full">
-                  Enviar Mensagem
+                <Button type="submit" variant="hero" size="lg" className="w-full" disabled={isLoading} aria-disabled={isLoading}>
+                  {isLoading ? "Enviando..." : "Enviar Mensagem"}
                   <Send className="ml-2 h-5 w-5" />
                 </Button>
               </form>

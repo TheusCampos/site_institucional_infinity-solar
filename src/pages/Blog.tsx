@@ -4,90 +4,118 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar, Clock, Search, ArrowRight } from "lucide-react";
+import { Calendar, Clock, Search, ArrowRight, Loader2, X, ArrowDownWideNarrow, ArrowUpWideNarrow, CalendarRange } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import residentialImg from "@/assets/project-residential.jpg";
-import commercialImg from "@/assets/project-commercial.jpg";
-import processDiagram from "@/assets/process-diagram.jpg";
+import { useMemo, useState, useEffect } from "react";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Calendar as DayCalendar } from "@/components/ui/calendar";
+import type { DateRange } from "react-day-picker";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPosts, queryKeys, type BlogPostListItem } from "@/api/blog";
+import PostCard from "@/components/blog/PostCard";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { useSEO } from "@/hooks/useSEO";
+import "@/styles/blog.css";
 
+// Página de listagem do Blog: busca, filtros, ranking e paginação
 const Blog = () => {
+  // Estado de busca e filtros
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("todos");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("");
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [activeOnly, setActiveOnly] = useState(true);
+  const [tag, setTag] = useState<string | null>(null);
+  const [sortMode, setSortMode] = useState<"recentes" | "antigos" | "personalizado">("recentes");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: undefined, to: undefined });
 
-  const categories = ["todos", "economia", "instalação", "manutenção", "legislação"];
+  // Debounce para evitar chamadas excessivas durante digitação
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const trimmed = searchTerm.trim();
+      setDebouncedSearchTerm(trimmed);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [searchTerm]);
 
-  const articles = [
-    {
-      id: 1,
-      title: "Como Calcular o ROI de um Sistema de Energia Solar",
-      excerpt: "Aprenda a calcular o retorno sobre investimento do seu sistema fotovoltaico e entenda quando você começará a economizar de verdade.",
-      category: "economia",
-      image: residentialImg,
-      date: "2025-01-15",
-      readTime: "5 min",
-      author: "João Silva",
-    },
-    {
-      id: 2,
-      title: "Passo a Passo: Instalação de Painéis Solares Residenciais",
-      excerpt: "Conheça todas as etapas da instalação de um sistema solar residencial, desde o projeto até a ativação pela concessionária.",
-      category: "instalação",
-      image: processDiagram,
-      date: "2025-01-10",
-      readTime: "8 min",
-      author: "Maria Santos",
-    },
-    {
-      id: 3,
-      title: "Manutenção Preventiva: Mantenha Seu Sistema Solar em Alta Performance",
-      excerpt: "Dicas essenciais de manutenção para garantir a máxima eficiência dos seus painéis solares ao longo dos anos.",
-      category: "manutenção",
-      image: commercialImg,
-      date: "2025-01-05",
-      readTime: "6 min",
-      author: "Carlos Oliveira",
-    },
-    {
-      id: 4,
-      title: "Lei 14.300/2022: O Marco Legal da Energia Solar no Brasil",
-      excerpt: "Entenda as mudanças trazidas pelo novo marco legal e como isso impacta quem deseja instalar energia solar.",
-      category: "legislação",
-      image: residentialImg,
-      date: "2024-12-28",
-      readTime: "7 min",
-      author: "Ana Costa",
-    },
-    {
-      id: 5,
-      title: "5 Formas de Maximizar a Economia com Energia Solar",
-      excerpt: "Estratégias práticas para otimizar seu consumo e aproveitar ao máximo o sistema de compensação de créditos.",
-      category: "economia",
-      image: commercialImg,
-      date: "2024-12-20",
-      readTime: "5 min",
-      author: "Pedro Almeida",
-    },
-    {
-      id: 6,
-      title: "Energia Solar em Indústrias: Benefícios e Desafios",
-      excerpt: "Como sistemas solares de grande porte estão transformando o setor industrial e reduzindo custos operacionais.",
-      category: "economia",
-      image: processDiagram,
-      date: "2024-12-15",
-      readTime: "10 min",
-      author: "Roberto Lima",
-    },
-  ];
-
-  const filteredArticles = articles.filter((article) => {
-    const matchesCategory = selectedCategory === "todos" || article.category === selectedCategory;
-    const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         article.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
+  // Consulta de posts com React Query
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: queryKeys.posts({ page, limit: 9, search: debouncedSearchTerm, ativo: activeOnly, sort: "-data_postagem" }),
+    queryFn: () => fetchPosts({ page, limit: 9, search: debouncedSearchTerm, ativo: activeOnly, sort: "-data_postagem" }),
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
   });
 
-  const featuredArticle = articles[0];
+  const items = useMemo(() => data?.items ?? [], [data?.items]);
+  const totalPages = data ? Math.max(1, Math.ceil(data.total / data.limit)) : 1;
+  const tags = useMemo(() => {
+    const all = items.flatMap((p) => p.tags ?? []);
+    return Array.from(new Set(all)).slice(0, 10);
+  }, [items]);
+  const filteredByTag = useMemo(() => {
+    if (!tag) return items;
+    return items.filter((p) => (p.tags ?? []).includes(tag));
+  }, [items, tag]);
+
+  // Filtragem por intervalo de datas (modo personalizado)
+  const filteredByDate = useMemo(() => {
+    if (sortMode !== "personalizado" || !dateRange.from || !dateRange.to) return filteredByTag;
+    const fromTs = dateRange.from.setHours(0, 0, 0, 0);
+    const toTs = dateRange.to.setHours(23, 59, 59, 999);
+    return filteredByTag.filter((p) => {
+      if (!p.data_postagem) return false;
+      const ts = new Date(p.data_postagem).getTime();
+      return ts >= fromTs && ts <= toTs;
+    });
+  }, [filteredByTag, sortMode, dateRange.from, dateRange.to]);
+
+  // Ordenação por relevância e desempate por data
+  const ranked = useMemo(() => {
+    const base = filteredByDate.slice();
+    const term = debouncedSearchTerm.toLowerCase();
+    if (!term) {
+      // Apply date sort when no search term
+      if (sortMode === "antigos") base.sort((a, b) => (new Date(a.data_postagem || 0).getTime() - new Date(b.data_postagem || 0).getTime()));
+      else base.sort((a, b) => (new Date(b.data_postagem || 0).getTime() - new Date(a.data_postagem || 0).getTime()));
+      return base;
+    }
+    const tokens = term.split(/\s+/).filter(Boolean);
+    const score = (p: BlogPostListItem) => {
+      const title = (p.titulo || "").toLowerCase();
+      const resumo = (p.resumo || "").toLowerCase();
+      const autor = (p.autor || "").toLowerCase();
+      const tags = (p.tags || []).map((t) => t.toLowerCase());
+      let s = 0;
+      for (const tk of tokens) {
+        if (title.includes(tk)) s += 5;
+        if (resumo.includes(tk)) s += 3;
+        if (autor.includes(tk)) s += 2;
+        if (tags.some((t) => t.includes(tk))) s += 2;
+      }
+      return s;
+    };
+    base.sort((a, b) => {
+      const sa = score(a);
+      const sb = score(b);
+      if (sa !== sb) return sb - sa;
+      // tie-breaker by date according to sortMode
+      const da = new Date(a.data_postagem || 0).getTime();
+      const db = new Date(b.data_postagem || 0).getTime();
+      return sortMode === "antigos" ? da - db : db - da;
+    });
+    return base;
+  }, [filteredByDate, debouncedSearchTerm, sortMode]);
+
+  // Metadados de SEO da página
+  useSEO({
+    title: "Blog | Infinity Solar",
+    description: "Conteúdos sobre energia solar, economia e sustentabilidade.",
+    url: typeof window !== "undefined" ? window.location.href : undefined,
+    image: undefined,
+    type: "website",
+  });
 
   return (
     <div className="min-h-screen">
@@ -107,125 +135,161 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* Featured Article */}
       <section className="py-12 bg-background">
         <div className="container mx-auto px-4">
-          <Card className="overflow-hidden border-2 hover:border-primary hover:shadow-strong transition-all duration-300 max-w-5xl mx-auto animate-scale-in">
-            <div className="grid lg:grid-cols-2">
-              <div className="relative h-80 lg:h-auto overflow-hidden">
-                <img
-                  src={featuredArticle.image}
-                  alt={featuredArticle.title}
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                />
-                <Badge className="absolute top-4 left-4 bg-secondary text-secondary-foreground">
-                  Destaque
-                </Badge>
-              </div>
-              <CardContent className="p-8 flex flex-col justify-center">
-                <Badge className="w-fit mb-4 capitalize">{featuredArticle.category}</Badge>
-                <h2 className="text-3xl font-bold text-foreground mb-4 hover:text-primary transition-colors">
-                  {featuredArticle.title}
-                </h2>
-                <p className="text-muted-foreground mb-6">{featuredArticle.excerpt}</p>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    {new Date(featuredArticle.date).toLocaleDateString('pt-BR')}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
-                    {featuredArticle.readTime}
-                  </span>
-                </div>
-                <Button variant="heroPrimary">
-                  Ler Artigo Completo
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </CardContent>
+          {isError && (
+            <div className="max-w-3xl mx-auto text-center text-red-600">
+              Erro ao carregar posts. Tente novamente.
             </div>
-          </Card>
+          )}
+          {!isError && (
+            <div className="max-w-5xl mx-auto">
+              <div className="sticky top-24 z-30 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b flex flex-col md:flex-row gap-4 mb-8 px-2 py-3">
+                <form
+                  role="search"
+                  className="relative flex-1 blog-search"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const trimmed = searchTerm.trim();
+                    if (!trimmed) {
+                      setSearchError("Digite um termo para buscar");
+                      return;
+                    }
+                    setSearchError(null);
+                    setDebouncedSearchTerm(trimmed);
+                    setPage(1);
+                  }}
+                >
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                  <Input
+                    id="blog-search"
+                    type="search"
+                    inputMode="search"
+                    placeholder="Buscar artigos..."
+                    className="pl-10 pr-10"
+                    aria-label="Buscar artigos"
+                    aria-busy={isLoading ? "true" : "false"}
+                    aria-invalid={isError || !!searchError ? "true" : "false"}
+                    aria-describedby="search-status"
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setPage(1);
+                      setSearchError(null);
+                      setSearchTerm(e.target.value);
+                    }}
+                  />
+                  {searchTerm && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => { setSearchTerm(""); setDebouncedSearchTerm(""); setPage(1); setSearchError(null); }}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            aria-label="Limpar busca"
+                          >
+                            <X className="h-4 w-4" aria-hidden="true" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Limpar campo de busca</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                  {isLoading && (
+                    <Loader2 className="absolute right-9 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground animate-spin" aria-hidden="true" />
+                  )}
+                  <div id="search-status" className="sr-only" aria-live="polite">
+                    {isLoading ? "Buscando..." : isError ? "Erro ao buscar" : searchError ? searchError : ""}
+                  </div>
+                </form>
+                <div className="flex gap-2 flex-wrap items-center">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="min-w-56">
+                          <Select value={sortMode} onValueChange={(v) => { setSortMode(v as "recentes" | "antigos" | "personalizado"); setPage(1); }}>
+                            <SelectTrigger aria-label="Filtro por data" className="border-2">
+                              <SelectValue placeholder="Filtrar por data" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="recentes"><span className="inline-flex items-center gap-2"><ArrowDownWideNarrow className="h-4 w-4" />Mais recentes primeiro</span></SelectItem>
+                              <SelectItem value="antigos"><span className="inline-flex items-center gap-2"><ArrowUpWideNarrow className="h-4 w-4" />Mais antigos primeiro</span></SelectItem>
+                              <SelectItem value="personalizado"><span className="inline-flex items-center gap-2"><CalendarRange className="h-4 w-4" />Personalizado</span></SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>Escolha a ordem de data dos resultados</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  {sortMode === "personalizado" && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="inline-flex items-center gap-2">
+                          <CalendarRange className="h-4 w-4" /> Intervalo de datas
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <DayCalendar mode="range" selected={dateRange} onSelect={(v?: DateRange) => { setDateRange(v || { from: undefined, to: undefined }); setPage(1); }} numberOfMonths={2} />
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                  {tags.map((t) => (
+                    <TooltipProvider key={t}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant={tag === t ? "default" : "outline"} onClick={() => { setPage(1); setTag(tag === t ? null : t); }} className="capitalize">
+                            {t}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Filtrar por tag: {t}</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {isLoading && Array.from({ length: 9 }).map((_, i) => (
+                  <Card key={i} className="h-72 animate-pulse" />
+                ))}
+                {!isLoading && ranked.map((post: BlogPostListItem, idx: number) => <PostCard key={post.id} post={post} highlight={idx === 0} />)}
+              </div>
+
+              {!isLoading && ranked.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground text-lg">Nenhum artigo encontrado.</p>
+                </div>
+              )}
+
+              <div className="mt-8">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious href="#" onClick={(e) => { e.preventDefault(); setPage((p) => Math.max(1, p - 1)); }} />
+                    </PaginationItem>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).slice(Math.max(0, page - 3), page + 2).map((p) => (
+                      <PaginationItem key={p}>
+                        <PaginationLink href="#" isActive={p === page} onClick={(e) => { e.preventDefault(); setPage(p); }}>
+                          {p}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                      <PaginationNext href="#" onClick={(e) => { e.preventDefault(); setPage((p) => Math.min(totalPages, p + 1)); }} />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Search and Filter */}
       <section className="py-12 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-4 mb-8">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Buscar artigos..."
-                  className="pl-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                {categories.map((cat) => (
-                  <Button
-                    key={cat}
-                    variant={selectedCategory === cat ? "default" : "outline"}
-                    onClick={() => setSelectedCategory(cat)}
-                    className="capitalize"
-                  >
-                    {cat}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Articles Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredArticles.slice(1).map((article, index) => (
-                <Card
-                  key={article.id}
-                  className="overflow-hidden border-2 hover:border-primary hover:shadow-medium transition-all duration-300 group animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={article.image}
-                      alt={article.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <Badge className="absolute top-3 left-3 capitalize">{article.category}</Badge>
-                  </div>
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                      {article.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                      {article.excerpt}
-                    </p>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(article.date).toLocaleDateString('pt-BR')}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {article.readTime}
-                      </span>
-                    </div>
-                    <Button variant="ghost" className="w-full group-hover:bg-primary group-hover:text-primary-foreground">
-                      Ler mais
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {filteredArticles.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground text-lg">
-                  Nenhum artigo encontrado. Tente outra busca ou categoria.
-                </p>
-              </div>
-            )}
+          <div className="max-w-5xl mx-auto text-center">
+            <Link to="/" className="text-muted-foreground hover:text-primary">Voltar para a página inicial</Link>
           </div>
         </div>
       </section>
