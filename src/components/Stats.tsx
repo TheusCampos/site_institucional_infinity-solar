@@ -1,11 +1,11 @@
 const Stats = () => {
   const stats = [
     {
-      value: "500+",
+      value: "+200",
       label: "Projetos Instalados"
     },
     {
-      value: "10+",
+      value: "+10",
       label: "Anos de Experiência"
     },
     {

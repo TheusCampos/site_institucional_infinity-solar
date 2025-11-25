@@ -104,15 +104,15 @@ const Contact = () => {
               <CardContent className="p-6">
                 <div className="flex items-start gap-4 mb-6">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Phone className="h-6 w-6 text-primary" />
+                    <i className="bi bi-whatsapp text-primary text-2xl"></i>
                   </div>
                   <div>
                     <h4 className="font-semibold text-foreground mb-1">Telefone</h4>
                     <a
-                      href="tel:+5511999999999"
+                      href="tel:+5565996961418"
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
-                      (11) 99999-9999
+                      (65) 99696-1418
                     </a>
                   </div>
                 </div>
@@ -124,10 +124,10 @@ const Contact = () => {
                   <div>
                     <h4 className="font-semibold text-foreground mb-1">Email</h4>
                     <a
-                      href="mailto:contato@infinitysolar.com.br"
+                      href="mailto:infinitysolarvg@gmail.com"
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
-                      contato@infinitysolar.com.br
+                      infinitysolarvg@gmail.com
                     </a>
                   </div>
                 </div>
@@ -139,8 +139,8 @@ const Contact = () => {
                   <div>
                     <h4 className="font-semibold text-foreground mb-1">Endereço</h4>
                     <p className="text-muted-foreground">
-                      Rua Exemplo, 123 - Centro<br />
-                      São Paulo, SP - CEP 01000-000
+                      Av. Ulisses Pompeu de Campos, 3241<br />
+                      Centro Norte, Várzea Grande – MT
                     </p>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ const Contact = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     required
-                    placeholder="(11) 99999-9999"
+                    placeholder="(65) 99999-9999"
                   />
                 </div>
 

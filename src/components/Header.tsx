@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
-import BrandLogo from "./icons/BrandLogo";
+import headerLogo from "@/assets/logo-infinity-png.png";
 
 const NAV_LINKS = Object.freeze([
   { name: "Início", path: "/" },
@@ -36,11 +36,8 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <BrandLogo className="h-8 w-8 text-secondary group-hover:rotate-180 transition-transform duration-500" />
-            <span className="text-xl font-bold text-foreground">
-              Infinity <span className="text-primary">Solar</span>
-            </span>
+          <Link to="/" className="flex items-center gap-2 group" aria-label="Início" translate="no">
+            <img src={headerLogo} alt="Infinity Solar" className="h-[90px] w-auto" loading="eager" decoding="async" />
           </Link>
 
           {/* Desktop Navigation */}

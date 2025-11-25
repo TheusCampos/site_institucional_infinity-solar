@@ -5,28 +5,36 @@ import Contact from "@/components/Contact";
 import Map from "@/components/Map";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const Contatos = () => {
+  useSEO({
+    title: "Contatos | Infinity Solar",
+    description: "Fale conosco por telefone, e-mail ou WhatsApp. Veja nossa localização e horários.",
+    url: typeof window !== "undefined" ? window.location.href : undefined,
+    type: "website",
+  });
   const contactInfo = [
     {
       icon: Phone,
       title: "Telefone",
-      details: ["(11) 99999-9999", "(11) 3333-3333"],
+      details: ["(65) 99696-1418", "(65) 3029-4171"],
     },
     {
       icon: Mail,
       title: "E-mail",
-      details: ["contato@infinitysolar.com.br", "comercial@infinitysolar.com.br"],
+      details: ["infinitysolarvg@gmail.com"],
     },
     {
       icon: MapPin,
       title: "Endereço",
-      details: ["Av. Paulista, 1000", "São Paulo - SP, 01310-100"],
+      details: ["Av. Ulisses Pompeu de Campos, 3241", "Centro Norte, Várzea Grande – MT"],
     },
     {
       icon: Clock,
       title: "Horário",
-      details: ["Segunda a Sexta: 8h às 18h", "Sábado: 9h às 13h"],
+      details: ["Segunda a Sexta: 8h às 17h"],
     },
   ];
 
@@ -42,6 +50,7 @@ const Contatos = () => {
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
+          <Breadcrumbs currentTitle="Contatos" />
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
               Entre em <span className="text-primary">Contato</span>

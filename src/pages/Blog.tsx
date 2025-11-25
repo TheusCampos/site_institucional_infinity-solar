@@ -18,6 +18,7 @@ import PostCard from "@/components/blog/PostCard";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { useSEO } from "@/hooks/useSEO";
 import "@/styles/blog.css";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // Página de listagem do Blog: busca, filtros, ranking e paginação
 const Blog = () => {
@@ -124,6 +125,7 @@ const Blog = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-20 bg-gradient-to-br from-primary/5 to-secondary/5">
         <div className="container mx-auto px-4">
+          <Breadcrumbs currentTitle="Blog" />
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
               Blog <span className="text-primary">Infinity Solar</span>

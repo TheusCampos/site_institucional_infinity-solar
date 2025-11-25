@@ -18,8 +18,22 @@ import teamInstall from "@/assets/team-install.jpg";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Shield, Leaf } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const Index = () => {
+  useSEO({
+    title: "Infinity Solar — Energia Solar Residencial e Comercial",
+    description: "Projetos personalizados, garantia e instalação profissional. Solicite seu orçamento.",
+    url: typeof window !== "undefined" ? window.location.href : undefined,
+    type: "website",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Infinity Solar",
+      url: typeof window !== "undefined" ? window.location.origin : undefined,
+      logo: "/src/assets/logo-infinity-png.png",
+    },
+  });
   return (
     <div className="min-h-screen">
       <Header />

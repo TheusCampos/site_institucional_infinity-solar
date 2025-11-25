@@ -2,14 +2,15 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import Autoplay from "embla-carousel-autoplay";
 
 const Brands = () => {
-  const brands = [
-    { name: "Canadian Solar", logo: "CS" },
-    { name: "Jinko Solar", logo: "JS" },
-    { name: "Trina Solar", logo: "TS" },
-    { name: "GoodWe", logo: "GW" },
-    { name: "Growatt", logo: "GT" },
-    { name: "Fronius", logo: "FR" },
-  ];
+  const logos = import.meta.glob("@/assets/logos/*.{png,webp,svg,jpg,jpeg}", { eager: true });
+  const logoItems = Object.entries(logos)
+    .map(([path, mod]) => {
+      const src = (mod as { default: string }).default;
+      const file = (path.split("/").pop() || "").replace(/\.[^.]+$/, "");
+      const name = file.replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
+      return { name, src };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <section className="py-16 bg-muted/30 relative overflow-hidden">
@@ -37,16 +38,11 @@ const Brands = () => {
           className="w-full"
         >
           <CarouselContent className="-ml-4">
-            {brands.map((brand, index) => (
+            {logoItems.map((item, index) => (
               <CarouselItem key={index} className="pl-4 basis-1/2 md:basis-1/3 lg:basis-1/6">
-                <div className="flex items-center justify-center p-6 bg-background rounded-lg border-2 border-border hover:border-primary transition-all duration-300 group">
+                <div className="flex items-center justify-center p-6 bg-background rounded-lg border-2 border-border hover:border-primary transition-all duration-300 group reveal">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-muted-foreground group-hover:text-primary transition-colors">
-                      {brand.logo}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-2">
-                      {brand.name}
-                    </div>
+                    <img src={item.src} alt={item.name} className="h-[80px] w-auto object-contain mx-auto" loading="lazy" decoding="async" />
                   </div>
                 </div>
               </CarouselItem>

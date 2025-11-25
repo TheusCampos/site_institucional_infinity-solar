@@ -1,25 +1,22 @@
 import { Link } from "react-router-dom";
-import { Sun, Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
+import headerLogo from "@/assets/logo-infinity-png.png";
 
 const Footer = () => {
   return (
     <footer className="bg-foreground text-background pt-16 pb-8">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Sun className="h-8 w-8 text-secondary" />
-              <span className="text-xl font-bold">
-                Infinity <span className="text-primary">Solar</span>
-              </span>
+              <img src={headerLogo} alt="Infinity Solar" className="h-[80px] w-auto" loading="lazy" decoding="async" />
             </div>
             <p className="text-background/80 text-sm mb-4">
               Energia limpa. Economia real. Transformando o futuro com sustentabilidade.
             </p>
             <div className="flex gap-3">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/profile.php?id=61578164110435&locale=pt_BR"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background/10 hover:bg-primary transition-colors"
@@ -28,22 +25,13 @@ const Footer = () => {
                 <Facebook className="h-5 w-5" />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/infinitysolar_energy/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background/10 hover:bg-primary transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-background/10 hover:bg-primary transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
               </a>
             </div>
           </div>
@@ -92,18 +80,24 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2 text-background/80">
                 <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                <span>Rua Exemplo, 123 - Centro<br />São Paulo, SP - CEP 01000-000</span>
+                <span>Av. Ulisses Pompeu de Campos, 3241<br />Centro Norte, Várzea Grande – MT</span>
               </li>
               <li className="flex items-center gap-2 text-background/80">
                 <Phone className="h-5 w-5 text-primary flex-shrink-0" />
-                <a href="tel:+5511999999999" className="hover:text-primary transition-colors">
-                  (11) 99999-9999
+                <a href="tel:+5565996961418" className="hover:text-primary transition-colors">
+                  (65) 99696-1418
+                </a>
+              </li>
+              <li className="flex items-center gap-2 text-background/80">
+                <Phone className="h-5 w-5 text-primary flex-shrink-0" />
+                <a href="tel:+556530294171" className="hover:text-primary transition-colors">
+                  (65) 3029-4171
                 </a>
               </li>
               <li className="flex items-center gap-2 text-background/80">
                 <Mail className="h-5 w-5 text-primary flex-shrink-0" />
-                <a href="mailto:contato@infinitysolar.com.br" className="hover:text-primary transition-colors">
-                  contato@infinitysolar.com.br
+                <a href="mailto:infinitysolarvg@gmail.com" className="hover:text-primary transition-colors">
+                  infinitysolarvg@gmail.com
                 </a>
               </li>
             </ul>
@@ -111,8 +105,17 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-background/20 pt-8 text-center text-sm text-background/60">
-          <p>&copy; {new Date().getFullYear()} Infinity Solar. Todos os direitos reservados.</p>
+        <div className="border-t border-background/20 pt-8">
+          <div className="container mx-auto px-4 flex items-center justify-between text-sm text-background/60">
+            <p className="text-left">&copy; {new Date().getFullYear()} Infinity Solar. Todos os direitos reservados.</p>
+            <p className="text-right">
+              Desenvolvido por
+              {" "}
+              <a href="https://matheusdev.site/" target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-primary">
+                Matheus Campos
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

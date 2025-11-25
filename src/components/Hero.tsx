@@ -21,8 +21,8 @@ const Hero = () => {
 
       {/* Content */}
       <div className="container mx-auto px-4 z-10 relative pt-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-background mb-6 animate-fade-in-up">
+        <div className="mx-auto text-center max-w-4xl lg:max-w-none">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-background mb-6 animate-fade-in-up tracking-tight lg:tracking-tighter lg:whitespace-nowrap leading-tight">
             Energia Limpa.{" "}
             <span className="text-secondary">Economia Real.</span>
           </h1>

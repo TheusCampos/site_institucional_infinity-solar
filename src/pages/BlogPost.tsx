@@ -10,6 +10,7 @@ import { sanitizeHTMLBasic } from "@/utils/sanitize";
 import { useMemo } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import "@/styles/blog.css";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // Página de detalhe do Post: SEO, sanitização e render seguro de conteúdo
 export default function BlogPost() {
@@ -64,6 +65,7 @@ export default function BlogPost() {
       <Header />
       <section className="pt-32 pb-12 bg-gradient-to-br from-primary/5 to-secondary/5">
         <div className="container mx-auto px-4 max-w-5xl">
+          <Breadcrumbs currentTitle={post?.titulo || "Post"} />
           {isError && <div className="text-center text-red-600">Post não encontrado.</div>}
           {isLoading && <div className="text-center">Carregando...</div>}
           {!isLoading && post && (

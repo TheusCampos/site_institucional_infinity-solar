@@ -3,7 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 const WhatsAppButton = () => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const phoneNumber = "5511999999999"; // Replace with actual WhatsApp number
+  const phoneNumber = "5565996961418"; // Número oficial do WhatsApp
   const message = "Olá! Gostaria de solicitar um orçamento para energia solar.";
 
   const handleClick = () => {

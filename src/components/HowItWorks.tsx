@@ -1,5 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
-import processDiagram from "@/assets/process-diagram.jpg";
+import processDiagram from "@/assets/process-diagram.png";
 
 const HowItWorks = () => {
   const steps = [
@@ -68,17 +68,15 @@ const HowItWorks = () => {
             ))}
           </div>
 
-          {/* Diagram Image */}
-          <div className="relative">
-            <div className="rounded-2xl overflow-hidden shadow-strong animate-scale-in">
-              <img
-                src={processDiagram}
-                alt="Diagrama do processo de instalação"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary/20 rounded-full blur-3xl"></div>
-            <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
+          {/* Diagram Image sem container de fundo */}
+          <div className="relative bg-transparent-important">
+            <img
+              src={processDiagram}
+              alt="Diagrama do processo de instalação"
+              className="w-full h-full object-contain bg-transparent-important"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </div>
       </div>

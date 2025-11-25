@@ -7,11 +7,19 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, Download, Mail } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "react-router-dom";
+import { useSEO } from "@/hooks/useSEO";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import residentialImg from "@/assets/project-residential.jpg";
 import commercialImg from "@/assets/project-commercial.jpg";
-import processDiagram from "@/assets/process-diagram.jpg";
+import processDiagram from "@/assets/process-diagram.png";
 
 const Projetos = () => {
+  useSEO({
+    title: "Projetos | Infinity Solar",
+    description: "Detalhe do processo, cases e benefícios dos projetos de energia solar.",
+    url: typeof window !== "undefined" ? window.location.href : undefined,
+    type: "website",
+  });
   const timeline = [
     {
       phase: "Análise e Viabilidade",
@@ -137,6 +145,7 @@ const Projetos = () => {
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
+          <Breadcrumbs currentTitle="Projetos" />
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <div className="inline-block mb-6">
               <div className="h-1 w-20 bg-primary rounded-full mx-auto mb-6"></div>

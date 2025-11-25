@@ -1,6 +1,6 @@
 import { Zap, Shield, Award, Wrench } from "lucide-react";
 import { Card } from "./ui/card";
-import guaranteePanels from "@/assets/guarantee-panels.jpg";
+import placasSolar from "@/assets/placas-solar-png.png";
 
 const SystemGuarantee = () => {
   const guarantees = [
@@ -45,11 +45,11 @@ const SystemGuarantee = () => {
 
         <div className="relative max-w-6xl mx-auto min-h-[600px] flex items-center justify-center">
           {/* Central Image */}
-          <div className="relative z-10 w-full max-w-md lg:max-w-lg">
+          <div className="relative z-10 w-full max-w-md lg:max-w-lg isolate bg-transparent-important">
             <img
-              src={guaranteePanels}
-              alt="Sistema de garantias"
-              className="w-full rounded-2xl shadow-strong"
+              src={placasSolar}
+              alt="Placas solares — Sistema de garantias"
+              className="w-full rounded-2xl shadow-strong img-remove-white"
               loading="lazy"
               decoding="async"
             />
