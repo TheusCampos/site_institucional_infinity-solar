@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bad+Script&family=Heebo:wght@100..900&family=Nova+Square&family=Satisfy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700&display=optional');
 
 @font-face {
   font-family: 'Nova Square';
@@ -66,7 +66,7 @@ All colors MUST be HSL.
     /* Transições suaves */
     --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    --font-primary: 'Heebo', 'Nova Square', 'Satisfy', 'Bad Script', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
+    --font-primary: 'Heebo', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
   }
 
   .dark {

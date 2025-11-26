@@ -2,7 +2,6 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import "./lib/perf";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import menuLogo from "@/assets/logo-infinity-png.png";
 import { initScrollReveal } from "./lib/scrollReveal";
 
