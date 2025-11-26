@@ -6,7 +6,6 @@ import Map from "@/components/Map";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
-import Breadcrumbs from "@/components/Breadcrumbs";
 
 const Contatos = () => {
   useSEO({
@@ -45,15 +44,18 @@ const Contatos = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-20 bg-gradient-to-br from-primary/5 to-secondary/5 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary rounded-full blur-3xl"></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }}></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
-          <Breadcrumbs currentTitle="Contatos" />
+          
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
+            <div className="inline-block mb-6">
+              <div className="h-1 w-20 bg-primary rounded-full mx-auto mb-6"></div>
+            </div>
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-              Entre em <span className="text-primary">Contato</span>
+              Nossos <span className="text-primary">Contatos</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
               Estamos prontos para transformar sua energia. Fale conosco e descubra como podemos ajudar você.
@@ -62,9 +64,13 @@ const Contatos = () => {
         </div>
       </section>
 
-      {/* Contact Info Cards */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-background relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]" aria-hidden="true">
+          <svg data-testid="contact-cards-top-wave" className="relative block w-full h-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-secondary/5"></path>
+          </svg>
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {contactInfo.map((info, index) => (
               <Card

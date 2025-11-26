@@ -15,6 +15,7 @@ const Hero = () => {
           loading="eager"
           decoding="async"
           sizes="100vw"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-overlay"></div>
       </div>

@@ -9,7 +9,7 @@
 }
 
 @tailwind base;
-@tailwind components;
+/* @tailwind components; */
 @tailwind utilities;
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
@@ -127,4 +127,5 @@ All colors MUST be HSL.
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 0; transform: none; transition: opacity 200ms ease-out; }
   }
+  .cv-auto { content-visibility: auto; contain-intrinsic-size: 800px 1000px; }
 }

@@ -4,14 +4,13 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Download, Mail } from "lucide-react";
+import { CheckCircle2, Download, Mail, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "react-router-dom";
 import { useSEO } from "@/hooks/useSEO";
-import Breadcrumbs from "@/components/Breadcrumbs";
-import residentialImg from "@/assets/project-residential.jpg";
-import commercialImg from "@/assets/project-commercial.jpg";
+import { resolvePicture } from "@/lib/imageRegistry";
 import processDiagram from "@/assets/process-diagram.png";
+import { useEffect, useState } from "react";
 
 const Projetos = () => {
   useSEO({
@@ -53,62 +52,31 @@ const Projetos = () => {
     },
   ];
 
-  const caseStudies = [
-    {
-      title: "Residência Alto Padrão - Alphaville",
-      image: residentialImg,
-      power: "12 kWp",
-      panels: "30 módulos de 400W",
-      savings: "R$ 1.200/mês",
-      roi: "4-5 anos",
-      description: "Sistema completo com monitoramento inteligente e backup de energia para residência de luxo.",
-    },
-    {
-      title: "Indústria Metalúrgica - Jundiaí",
-      image: commercialImg,
-      power: "150 kWp",
-      panels: "375 módulos de 400W",
-      savings: "R$ 25.000/mês",
-      roi: "3-4 anos",
-      description: "Instalação em grande escala com estruturas especiais para telhado industrial.",
-    },
-    {
-      title: "Condomínio Residencial - Campinas",
-      image: residentialImg,
-      power: "65 kWp",
-      panels: "160 módulos de 405W",
-      savings: "R$ 8.500/mês",
-      roi: "3-4 anos",
-      description: "Projeto sustentável para condomínio com redução significativa nas despesas comuns.",
-    },
-    {
-      title: "Centro Comercial - Sorocaba",
-      image: commercialImg,
-      power: "200 kWp",
-      panels: "500 módulos de 400W",
-      savings: "R$ 35.000/mês",
-      roi: "3 anos",
-      description: "Maior projeto comercial da região com economia expressiva em energia.",
-    },
-    {
-      title: "Propriedade Rural - Interior SP",
-      image: residentialImg,
-      power: "25 kWp",
-      panels: "62 módulos de 405W",
-      savings: "R$ 3.200/mês",
-      roi: "4 anos",
-      description: "Solução completa para propriedade rural com autonomia energética.",
-    },
-    {
-      title: "Hospital Regional",
-      image: commercialImg,
-      power: "180 kWp",
-      panels: "450 módulos de 400W",
-      savings: "R$ 28.000/mês",
-      roi: "3-4 anos",
-      description: "Sistema crítico com backup para garantir funcionamento ininterrupto.",
-    },
-  ];
+  const galleryAssets = import.meta.glob("/src/assets/galeria-*.jpeg", { eager: true, query: "?url", import: "default" }) as Record<string, string>;
+  const galleryPaths = Object.keys(galleryAssets)
+    .sort((a, b) => {
+      const na = Number(a.match(/galeria-(\d+)/)?.[1] || 0);
+      const nb = Number(b.match(/galeria-(\d+)/)?.[1] || 0);
+      return na - nb;
+    });
+  const caseStudies = galleryPaths.map((p) => {
+    const num = Number(p.match(/galeria-(\d+)/)?.[1] || 0);
+    const title = `Galeria ${String(num).padStart(2, "0")}`;
+    return { title, image: p } as { title: string; image: string };
+  });
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!lightboxOpen) return;
+      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "ArrowRight") setCurrentIndex((i) => (i + 1) % caseStudies.length);
+      if (e.key === "ArrowLeft") setCurrentIndex((i) => (i - 1 + caseStudies.length) % caseStudies.length);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxOpen, caseStudies.length]);
 
   const faqs = [
     {
@@ -145,7 +113,7 @@ const Projetos = () => {
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
-          <Breadcrumbs currentTitle="Projetos" />
+          
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <div className="inline-block mb-6">
               <div className="h-1 w-20 bg-primary rounded-full mx-auto mb-6"></div>
@@ -167,18 +135,18 @@ const Projetos = () => {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-20 bg-background relative overflow-hidden">
+      <section className="py-20 bg-background relative overflow-hidden cv-auto">
         {/* Top Wave */}
         <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
           <svg className="relative block w-full h-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-muted/30"></path>
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-secondary/5"></path>
           </svg>
         </div>
 
         {/* Bottom Wave */}
         <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] rotate-180">
           <svg className="relative block w-full h-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-muted/30"></path>
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-secondary/5"></path>
           </svg>
         </div>
         
@@ -252,7 +220,7 @@ const Projetos = () => {
       </section>
 
       {/* Case Studies */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-muted/30 cv-auto">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 animate-fade-in-up">
             <div className="inline-block mb-4">
@@ -266,62 +234,98 @@ const Projetos = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
             {caseStudies.map((study, index) => (
-              <Card
-                key={index}
-                className="overflow-hidden border-2 hover:border-primary hover:shadow-strong transition-all duration-500 animate-scale-in hover:-translate-y-2 group"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={study.image}
-                    alt={study.title}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                  />
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-2xl font-semibold text-foreground mb-4">
-                    {study.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-6">{study.description}</p>
-                  
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="p-4 bg-primary/5 rounded-lg">
-                      <div className="text-sm text-muted-foreground mb-1">Potência</div>
-                      <div className="text-xl font-bold text-primary">{study.power}</div>
-                    </div>
-                    <div className="p-4 bg-primary/5 rounded-lg">
-                      <div className="text-sm text-muted-foreground mb-1">Economia Mensal</div>
-                      <div className="text-xl font-bold text-primary">{study.savings}</div>
-                    </div>
-                    <div className="p-4 bg-primary/5 rounded-lg">
-                      <div className="text-sm text-muted-foreground mb-1">Painéis</div>
-                      <div className="text-sm font-semibold text-foreground">{study.panels}</div>
-                    </div>
-                    <div className="p-4 bg-primary/5 rounded-lg">
-                      <div className="text-sm text-muted-foreground mb-1">ROI Estimado</div>
-                      <div className="text-sm font-semibold text-foreground">{study.roi}</div>
-                    </div>
+              <div key={index} className="group cursor-pointer rounded-lg overflow-hidden border-2 bg-card hover:border-primary hover:shadow-strong transition-all duration-300 hover:-translate-y-1">
+                <button
+                  type="button"
+                  className="block w-full leading-none p-0"
+                  aria-label={`Abrir imagem: ${study.title}`}
+                  onClick={() => { setCurrentIndex(index); setLightboxOpen(true); }}
+                >
+                  <div className="relative aspect-[4/3]">
+                    {(() => {
+                      const pic = resolvePicture(study.image);
+                      return (
+                    <picture className="block h-full w-full">
+                      {pic.webp && <source srcSet={pic.webp} type="image/webp" />}
+                      <img
+                        src={pic.img}
+                        alt={study.title}
+                        className="absolute inset-0 block w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                        decoding="async"
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      />
+                    </picture>
+                      );
+                    })()}
+                    <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
                   </div>
-                </CardContent>
-              </Card>
+                </button>
+              </div>
             ))}
           </div>
+
+          {lightboxOpen && (
+            <div
+              role="dialog"
+              aria-modal="true"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 animate-fade-in"
+              onClick={(e) => { if (e.target === e.currentTarget) setLightboxOpen(false); }}
+            >
+              {/* Botão Fechar - canto superior direito */}
+              <button
+                aria-label="Fechar"
+                type="button"
+                onClick={() => setLightboxOpen(false)}
+                className="fixed top-4 right-4 z-[100] w-10 h-10 min-w-10 min-h-10 rounded-full bg-white text-black shadow-strong hover:bg-white/90 transition-colors"
+              >
+                <X className="w-6 h-6 mx-auto" />
+              </button>
+
+              {/* Navegação lateral */}
+              <button
+                aria-label="Anterior"
+                onClick={() => setCurrentIndex((i) => (i - 1 + caseStudies.length) % caseStudies.length)}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 min-w-10 min-h-10 rounded-full bg-white text-black shadow-strong hover:bg-white/90 transition-colors"
+              >
+                <ChevronLeft className="h-6 w-6 mx-auto" />
+              </button>
+              <button
+                aria-label="Próxima"
+                onClick={() => setCurrentIndex((i) => (i + 1) % caseStudies.length)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 min-w-10 min-h-10 rounded-full bg-white text-black shadow-strong hover:bg-white/90 transition-colors"
+              >
+                <ChevronRight className="h-6 w-6 mx-auto" />
+              </button>
+
+              {/* Imagem centralizada e proporcional */}
+              <div className="relative z-10 flex items-center justify-center w-full h-full">
+                {(() => {
+                  const pic = resolvePicture(caseStudies[currentIndex].image);
+                  return (
+                    <picture>
+                      {pic.webp && <source srcSet={pic.webp} type="image/webp" />}
+                      <img
+                        src={pic.img}
+                        alt={caseStudies[currentIndex].title}
+                        className="max-w-[95vw] max-h-[95vh] object-contain transition-opacity duration-300"
+                        loading="lazy"
+                        decoding="async"
+                        sizes="(min-width: 1024px) 95vw, 100vw"
+                      />
+                    </picture>
+                  );
+                })()}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-fixed"
-          style={{
-            backgroundImage: `url(${processDiagram})`,
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/90 to-primary/20"></div>
-        </div>
-        
+      <section className="py-20 relative overflow-hidden cv-auto">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16 animate-fade-in-up">
             <div className="inline-block mb-4">
@@ -359,7 +363,7 @@ const Projetos = () => {
       </section>
 
       {/* How Solar Works */}
-      <section className="py-20 bg-muted/30 relative">
+      <section className="py-20 bg-muted/30 relative cv-auto">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-40 right-20 w-64 h-64 bg-primary rounded-full blur-3xl"></div>
         </div>

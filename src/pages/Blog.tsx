@@ -18,7 +18,6 @@ import PostCard from "@/components/blog/PostCard";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { useSEO } from "@/hooks/useSEO";
 import "@/styles/blog.css";
-import Breadcrumbs from "@/components/Breadcrumbs";
 
 // Página de listagem do Blog: busca, filtros, ranking e paginação
 const Blog = () => {
@@ -122,13 +121,19 @@ const Blog = () => {
     <div className="min-h-screen">
       <Header />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 bg-gradient-to-br from-primary/5 to-secondary/5">
-        <div className="container mx-auto px-4">
-          <Breadcrumbs currentTitle="Blog" />
+      <section className="pt-32 pb-20 bg-gradient-to-br from-primary/5 to-secondary/5 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }}></div>
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
+            <div className="inline-block mb-6">
+              <div className="h-1 w-20 bg-primary rounded-full mx-auto mb-6"></div>
+            </div>
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-              Blog <span className="text-primary">Infinity Solar</span>
+              Nosso <span className="text-primary">Blog</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
               Conteúdos exclusivos sobre energia solar, economia, tecnologia e sustentabilidade.
@@ -137,8 +142,13 @@ const Blog = () => {
         </div>
       </section>
 
-      <section className="py-12 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="py-12 bg-background relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]" aria-hidden="true">
+          <svg data-testid="blog-content-top-wave" className="relative block w-full h-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-secondary/5"></path>
+          </svg>
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           {isError && (
             <div className="max-w-3xl mx-auto text-center text-red-600">
               Erro ao carregar posts. Tente novamente.
@@ -146,7 +156,7 @@ const Blog = () => {
           )}
           {!isError && (
             <div className="max-w-5xl mx-auto">
-              <div className="sticky top-24 z-30 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b flex flex-col md:flex-row gap-4 mb-8 px-2 py-3">
+              <div className="relative z-0 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 border-b shadow-medium flex flex-col md:flex-row gap-4 mb-10 px-2 py-3">
                 <form
                   role="search"
                   className="relative flex-1 blog-search"
@@ -251,7 +261,7 @@ const Blog = () => {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {isLoading && Array.from({ length: 9 }).map((_, i) => (
                   <Card key={i} className="h-72 animate-pulse" />
                 ))}

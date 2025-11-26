@@ -1,6 +1,6 @@
 import { Card, CardContent } from "./ui/card";
 import { Star, Play } from "lucide-react";
-import { useState } from "react";
+import { useState, memo } from "react";
 
 const Testimonials = () => {
   const [playingVideo, setPlayingVideo] = useState<number | null>(null);
@@ -168,4 +168,4 @@ const Testimonials = () => {
   );
 };
 
-export default Testimonials;
+export default memo(Testimonials);

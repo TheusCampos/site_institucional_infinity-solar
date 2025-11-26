@@ -1,58 +1,26 @@
-import { useState } from "react";
 import { Button } from "./ui/button";
-import { Card, CardContent } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { ExternalLink } from "lucide-react";
+import { memo } from "react";
+import { Card } from "./ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
 import { Link } from "react-router-dom";
-import residentialImg from "@/assets/project-residential.jpg";
-import commercialImg from "@/assets/project-commercial.jpg";
+import { resolvePicture } from "@/lib/imageRegistry";
 
 const Projects = () => {
-  const [filter, setFilter] = useState("todos");
-
-  const projects = [
-    {
-      id: 1,
-      title: "Residência Solar - Zona Sul",
-      category: "residencial",
-      image: residentialImg,
-      power: "8.5 kWp",
-      savings: "R$ 850/mês",
-      location: "São Paulo, SP",
-    },
-    {
-      id: 2,
-      title: "Indústria Têxtil - Jundiaí",
-      category: "comercial",
-      image: commercialImg,
-      power: "75 kWp",
-      savings: "R$ 12.000/mês",
-      location: "Jundiaí, SP",
-    },
-    {
-      id: 3,
-      title: "Condomínio Residencial",
-      category: "residencial",
-      image: residentialImg,
-      power: "45 kWp",
-      savings: "R$ 4.500/mês",
-      location: "Campinas, SP",
-    },
-    {
-      id: 4,
-      title: "Supermercado Regional",
-      category: "comercial",
-      image: commercialImg,
-      power: "120 kWp",
-      savings: "R$ 18.000/mês",
-      location: "Sorocaba, SP",
-    },
-  ];
-
-  const filteredProjects =
-    filter === "todos"
-      ? projects
-      : projects.filter((p) => p.category === filter);
+  const galleryAssets = import.meta.glob("/src/assets/galeria-*.jpeg", { eager: true, query: "?url", import: "default" }) as Record<string, string>;
+  const galleryPaths = Object.keys(galleryAssets)
+    .sort((a, b) => {
+      const na = Number(a.match(/galeria-(\d+)/)?.[1] || 0);
+      const nb = Number(b.match(/galeria-(\d+)/)?.[1] || 0);
+      return na - nb;
+    });
+  const projects = galleryPaths.slice(0, 12).map((p, idx) => {
+    const n = Number(p.match(/galeria-(\d+)/)?.[1] || idx + 1);
+    return {
+      id: idx + 1,
+      title: `Projeto Galeria ${String(n).padStart(2, "0")}`,
+      image: p,
+    } as { id: number; title: string; image: string };
+  });
 
   return (
     <section className="py-20 bg-background relative overflow-hidden">
@@ -62,75 +30,43 @@ const Projects = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Projetos <span className="text-primary">Realizados</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Conheça alguns dos sistemas solares que projetamos e instalamos com excelência.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Galeria de projetos com foco visual e navegação simples.
           </p>
-
-          {/* Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-3">
-            {["todos", "residencial", "comercial"].map((cat) => (
-              <Button
-                key={cat}
-                variant={filter === cat ? "default" : "outline"}
-                onClick={() => setFilter(cat)}
-                className="capitalize"
-              >
-                {cat}
-              </Button>
-            ))}
-          </div>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {filteredProjects.map((project, index) => (
-            <Card
-              key={project.id}
-              className="overflow-hidden border-2 hover:border-primary hover:shadow-strong transition-all duration-300 group animate-fade-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="relative overflow-hidden rounded-[28px] bg-background shadow-md">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
-                  {project.category}
-                </Badge>
-              </div>
-              <CardContent className="p-6">
-                <h3 className="text-2xl font-semibold text-foreground mb-4">
-                  {project.title}
-                </h3>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <div className="text-sm text-muted-foreground">Potência</div>
-                    <div className="text-lg font-semibold text-primary">
-                      {project.power}
+        <div className="mb-12">
+          <Carousel opts={{ loop: true, align: "start" }}>
+            <CarouselContent>
+              {projects.map((project, index) => (
+                <CarouselItem key={project.id} className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                  <Card className="overflow-hidden border hover:shadow-medium transition-all duration-300 group">
+                    <div className="relative aspect-[4/3]">
+                      {(() => {
+                        const pic = resolvePicture(project.image);
+                        return (
+                        <picture className="block h-full w-full">
+                          {pic.webp && <source srcSet={pic.webp} type="image/webp" />}
+                          <img
+                            src={pic.img}
+                            alt={project.title}
+                            className="block w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                            decoding="async"
+                            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 100vw"
+                          />
+                        </picture>
+                        );
+                      })()}
+                      <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
                     </div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground">Economia</div>
-                    <div className="text-lg font-semibold text-primary">
-                      {project.savings}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-sm text-muted-foreground mb-4">
-                  📍 {project.location}
-                </div>
-                <Button variant="outline" className="w-full group" asChild>
-                  <Link to="/projetos">
-                    Ver Detalhes
-                    <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="bg-background/80 backdrop-blur-sm border" />
+            <CarouselNext className="bg-background/80 backdrop-blur-sm border" />
+          </Carousel>
         </div>
 
         <div className="text-center">
@@ -143,4 +79,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default memo(Projects);

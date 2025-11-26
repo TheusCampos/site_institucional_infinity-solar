@@ -1,4 +1,5 @@
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { memo } from "react";
 import Autoplay from "embla-carousel-autoplay";
 
 const Brands = () => {
@@ -54,4 +55,4 @@ const Brands = () => {
   );
 };
 
-export default Brands;
+export default memo(Brands);

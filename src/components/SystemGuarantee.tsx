@@ -44,8 +44,8 @@ const SystemGuarantee = () => {
         </div>
 
         <div className="relative max-w-6xl mx-auto min-h-[600px] flex items-center justify-center">
-          {/* Central Image */}
-          <div className="relative z-10 w-full max-w-md lg:max-w-lg isolate bg-transparent-important">
+          {/* Central Image (desktop only) */}
+          <div className="hidden lg:block relative z-20 w-full max-w-md lg:max-w-lg isolate bg-transparent-important">
             <img
               src={placasSolar}
               alt="Placas solares — Sistema de garantias"
@@ -110,37 +110,69 @@ const SystemGuarantee = () => {
             })}
           </div>
 
-          {/* Mobile View - Grid Below Image */}
-          <div className="lg:hidden absolute -bottom-80 left-0 right-0">
-            <div className="grid md:grid-cols-2 gap-6">
-              {guarantees.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <Card
-                    key={index}
-                    className="p-6 border-2 hover:border-primary transition-all duration-300"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Icon className="h-6 w-6 text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground mb-1">
-                          {item.title}
-                        </h3>
-                        <p className="text-2xl font-bold text-primary mb-1">{item.years}</p>
-                        <p className="text-xs text-muted-foreground">{item.description}</p>
-                      </div>
-                    </div>
-                  </Card>
-                );
-              })}
+          {/* Mobile View — top-left cards, centered image, bottom-right cards */}
+          <div className="lg:hidden w-full px-4">
+            <div className="flex flex-col gap-8">
+              <div>
+                <div className="mr-auto w-[85%] max-w-[420px] space-y-4">
+                  {guarantees.slice(0, 2).map((item, index) => {
+                    const Icon = item.icon;
+                    return (
+                      <Card key={`top-${index}`} className="p-6 border-2 hover:border-primary transition-all duration-300 bg-background/95 backdrop-blur-sm shadow-strong rounded-lg">
+                        <div className="flex items-start gap-4">
+                          <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Icon className="h-6 w-6 text-primary" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-foreground mb-1">{item.title}</h3>
+                            <p className="text-2xl font-bold text-primary mb-1">{item.years}</p>
+                            <p className="text-xs text-muted-foreground">{item.description}</p>
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <div className="mx-auto w-[85%] max-w-[420px]">
+                  <img
+                    src={placasSolar}
+                    alt="Placas solares — Sistema de garantias"
+                    className="w-full rounded-2xl shadow-strong img-remove-white"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="ml-auto w-[85%] max-w-[420px] space-y-4">
+                  {guarantees.slice(2).map((item, index) => {
+                    const Icon = item.icon;
+                    return (
+                      <Card key={`bottom-${index}`} className="p-6 border-2 hover:border-primary transition-all duration-300 bg-background/95 backdrop-blur-sm shadow-strong rounded-lg">
+                        <div className="flex items-start gap-4">
+                          <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Icon className="h-6 w-6 text-primary" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-foreground mb-1">{item.title}</h3>
+                            <p className="text-2xl font-bold text-primary mb-1">{item.years}</p>
+                            <p className="text-xs text-muted-foreground">{item.description}</p>
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>
         
-        {/* Spacing for mobile cards */}
-        <div className="lg:hidden h-96" />
+          {/* Mobile spacing now controlled by section layout */}
       </div>
     </section>
   );

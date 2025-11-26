@@ -1,26 +1,43 @@
-import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { ArrowRight } from "lucide-react";
-import serviceSolar from "@/assets/service-solar.jpg";
-import serviceWind from "@/assets/service-wind.jpg";
-import serviceCharge from "@/assets/service-charge.jpg";
+import { CheckCircle2 } from "lucide-react";
+import residentialImg from "@/assets/Energia Solar Residencial.jpeg";
+import commercialImg from "@/assets/Energia Solar Comercial.jpeg";
+import preventiveImg from "@/assets/manutencao-preventiva.jpeg";
 
 const Services = () => {
   const services = [
     {
-      title: "Serviços De Painéis Solares",
-      description: "Instalação completa de sistemas fotovoltaicos residenciais e comerciais com equipamentos de última geração.",
-      image: serviceSolar,
+      title: "Energia Solar Residencial",
+      description: "Soluções completas para casas com projeto sob medida e alta eficiência.",
+      image: residentialImg,
+      highlights: [
+        "Redução imediata na conta de luz",
+        "Projeto personalizado para seu consumo",
+        "Instalação rápida e segura",
+      ],
+      objectPositionClass: "",
     },
     {
-      title: "Serviços De Turbinas Eólicas",
-      description: "Soluções integradas de energia eólica para complementar seu sistema de geração renovável.",
-      image: serviceWind,
+      title: "Energia Solar Comercial",
+      description: "Projetos escaláveis para empresas visando economia e performance.",
+      image: commercialImg,
+      highlights: [
+        "Economia operacional e previsibilidade",
+        "Escalabilidade para crescimento",
+        "Monitoramento de desempenho",
+      ],
+      objectPositionClass: "",
     },
     {
-      title: "Controladores De Carga",
-      description: "Gestão inteligente de energia com sistemas de armazenamento e controle de carga avançados.",
-      image: serviceCharge,
+      title: "Manutenção Preventiva",
+      description: "Serviços periódicos para manter máxima eficiência e longevidade do sistema.",
+      image: preventiveImg,
+      highlights: [
+        "Inspeções técnicas regulares",
+        "Limpeza e ajustes de componentes",
+        "Otimização de geração",
+      ],
+      objectPositionClass: "object-[50%_0%]",
     },
   ];
 
@@ -45,11 +62,11 @@ const Services = () => {
               className="overflow-hidden border-2 hover:border-primary hover:shadow-strong transition-all duration-300 group animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="relative overflow-hidden h-64 rounded-[28px] bg-background shadow-md">
+              <div className="relative overflow-hidden h-64 rounded-b-lg">
                 <img
                   src={service.image}
                   alt={service.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  className={`w-full h-full object-cover ${service.objectPositionClass} group-hover:scale-110 transition-transform duration-500`}
                   loading="lazy"
                   decoding="async"
                 />
@@ -61,10 +78,14 @@ const Services = () => {
                 <p className="text-muted-foreground mb-4">
                   {service.description}
                 </p>
-                <Button variant="default" className="group/btn">
-                  Saber Mais
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                </Button>
+                <ul className="space-y-2">
+                  {service.highlights?.map((h, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-[2px]" />
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           ))}

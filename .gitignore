@@ -14,6 +14,8 @@ dist-ssr
 .env
 .trae/
 DIAGRAMA_ESTRUTURAL.png
+docs/
+src/docs/
 
 # Editor directories and files
 .vscode/*

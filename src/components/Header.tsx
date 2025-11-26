@@ -37,7 +37,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group" aria-label="Início" translate="no">
-            <img src={headerLogo} alt="Infinity Solar" className="h-[90px] w-auto" loading="eager" decoding="async" />
+            <img src={headerLogo} alt="Infinity Solar" className="h-[90px] w-auto" loading="eager" decoding="async" fetchPriority="high" />
           </Link>
 
           {/* Desktop Navigation */}

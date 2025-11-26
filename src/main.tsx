@@ -3,14 +3,18 @@ import App from "./App.tsx";
 import "./index.css";
 import "./lib/perf";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import tabIcon from "@/assets/infinity-solar.jpg";
+import menuLogo from "@/assets/logo-infinity-png.png";
 import { initScrollReveal } from "./lib/scrollReveal";
 
-const link = document.querySelector<HTMLLinkElement>('link[rel~="icon"]');
-const newLink = document.createElement("link");
-newLink.rel = "icon";
-newLink.type = "image/jpeg";
-newLink.href = tabIcon;
-document.head.appendChild(newLink);
+const iconLink = document.querySelector<HTMLLinkElement>('link[rel="icon"]') ?? document.createElement("link");
+iconLink.rel = "icon";
+iconLink.type = "image/png";
+iconLink.href = menuLogo;
+iconLink.setAttribute("sizes", "32x32");
+if (!iconLink.parentElement) document.head.appendChild(iconLink);
 createRoot(document.getElementById("root")!).render(<App />);
-initScrollReveal();
+if ("requestIdleCallback" in window) {
+  (window as unknown as { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(() => initScrollReveal());
+} else {
+  setTimeout(() => initScrollReveal(), 0);
+}

@@ -16,8 +16,7 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // TODO: Implement actual authentication with Lovable Cloud
-    // For now, simulate login
+    
     setTimeout(() => {
       setIsLoading(false);
       // Redirect to blog admin after successful login
