@@ -115,7 +115,7 @@ const Index = () => {
             {/* Image collage */}
             <div className="relative lg:order-last animate-scale-in">
               <div className="absolute -left-6 top-8 w-40 h-40 sm:w-56 sm:h-56 md:w-64 md:h-64 bg-primary/10 rounded-2xl"></div>
-              <div className="relative z-10 w-[85%] sm:w-[75%] md:w-[70%] rounded-2xl overflow-hidden shadow-strong hover:shadow-elegant transition-shadow duration-300 -translate-y-[40px]">
+              <div className="relative z-10 w-[75%] sm:w-[70%] md:w-[65%] aspect-[4/3] rounded-2xl overflow-hidden shadow-strong hover:shadow-elegant transition-shadow duration-300 -translate-y-[40px]">
                 <img
                   src={teamInstall}
                   alt="Equipe Infinity Solar instalando painéis solares"
@@ -125,14 +125,14 @@ const Index = () => {
                   sizes="(min-width: 1024px) 40vw, 100vw"
                 />
               </div>
-              <div className="absolute right-0 bottom-0 w-[70%] sm:w-[65%] md:w-[60%] rounded-2xl overflow-hidden shadow-strong translate-y-[40px]">
+              <div className="absolute right-0 bottom-0 w-[75%] sm:w-[70%] md:w-[65%] aspect-[4/3] rounded-2xl overflow-hidden shadow-strong translate-y-[40px]">
               <img
                 src={commercialImg}
                 alt="Galeria 01 – Projeto Solar Comercial"
                 className="w-full h-full object-cover"
                 loading="lazy"
                 decoding="async"
-                sizes="(min-width: 1024px) 35vw, 100vw"
+                sizes="(min-width: 1024px) 40vw, 100vw"
               />
               </div>
             </div>

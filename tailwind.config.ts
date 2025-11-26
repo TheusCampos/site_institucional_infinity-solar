@@ -14,6 +14,10 @@ export default {
       },
     },
     extend: {
+      borderWidth: {
+        DEFAULT: "3px",
+        2: "3px",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

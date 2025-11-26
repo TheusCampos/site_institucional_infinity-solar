@@ -45,6 +45,8 @@ const Services = () => {
     <section className="py-20 bg-background relative overflow-hidden">
       
       <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-[30px_1fr_30px]">
+          <div className="col-start-2">
         <div className="text-center mb-12">
           <p className="text-sm uppercase tracking-wider text-primary mb-2">
             NOSSOS SERVIÇOS
@@ -89,6 +91,8 @@ const Services = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+          </div>
         </div>
       </div>
     </section>

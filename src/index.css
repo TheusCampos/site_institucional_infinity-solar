@@ -109,6 +109,7 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
     font-family: var(--font-primary);
   }
+  .container { padding-left: 30px !important; padding-right: 30px !important; }
   .bad-script-regular { font-family: "Bad Script", cursive; font-weight: 400; font-style: normal; }
   .site-header *::before, .site-header *::after { content: none !important; }
   .site-header nav a { white-space: nowrap; text-transform: none; }

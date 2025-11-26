@@ -34,6 +34,8 @@ const HowItWorks = () => {
     <section className="py-20 bg-muted/30 relative overflow-hidden">
       
       <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-[30px_1fr_30px]">
+          <div className="col-start-2">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Como <span className="text-primary">Funciona?</span>
@@ -77,6 +79,8 @@ const HowItWorks = () => {
               loading="lazy"
               decoding="async"
             />
+          </div>
+        </div>
           </div>
         </div>
       </div>

@@ -34,6 +34,8 @@ const SystemGuarantee = () => {
     <section className="py-20 bg-background relative overflow-hidden">
       
       <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-[30px_1fr_30px]">
+          <div className="col-start-2">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Garantias do Seu <span className="text-primary">Sistema</span>
@@ -66,7 +68,7 @@ const SystemGuarantee = () => {
                 { bottom: '10%', right: '5%' },
               ];
               
-              return (
+          return (
                 <Card
                   key={index}
                   className="absolute p-6 border-2 hover:border-primary hover:shadow-strong transition-all duration-300 animate-scale-in w-64 bg-background/95 backdrop-blur-sm"
@@ -171,8 +173,9 @@ const SystemGuarantee = () => {
             </div>
           </div>
         </div>
-        
-          {/* Mobile spacing now controlled by section layout */}
+        </div>
+        </div>
+        {/* Mobile spacing now controlled by section layout */}
       </div>
     </section>
   );
