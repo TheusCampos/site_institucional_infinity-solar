@@ -1,7 +1,7 @@
 const Stats = () => {
   const stats = [
     {
-      value: "+200",
+      value: "+500",
       label: "Projetos Instalados"
     },
     {

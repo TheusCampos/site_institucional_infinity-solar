@@ -25,6 +25,7 @@ const Header = () => {
   }, []);
 
   const isActive = (path: string) => location.pathname === path;
+  const isHomeTop = location.pathname === "/" && !isScrolled;
 
   return (
     <header
@@ -49,7 +50,7 @@ const Header = () => {
                 aria-label={link.name}
                 translate="no"
                 className={`text-sm font-medium transition-colors hover:text-primary relative ${
-                  isActive(link.path) ? "text-primary" : "text-foreground"
+                  isActive(link.path) ? "text-primary" : isHomeTop ? "text-background" : "text-foreground"
                 }`}
               >
                 <span className="link-text">{link.name}</span>
@@ -70,9 +71,9 @@ const Header = () => {
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
-              <X className="h-6 w-6 text-foreground" />
+              <X className={`h-6 w-6 ${isHomeTop ? "text-background" : "text-foreground"}`} />
             ) : (
-              <Menu className="h-6 w-6 text-foreground" />
+              <Menu className={`h-6 w-6 ${isHomeTop ? "text-background" : "text-foreground"}`} />
             )}
           </button>
         </div>
